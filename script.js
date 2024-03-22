@@ -55,11 +55,6 @@ document.querySelector("button").addEventListener('click' , function(norefresh) 
 });
 
 //creation de la fonction check box pour controler que les élément ne soit pas vides
-
-let firstname = document.getElementById("first-name")
-let lastname = document.getElementById("last-names")
-let message = document.getElementById("message")
-
 function checkbox(firstname,lastname,message){
     if (firstname--){
         alert('le champ premon est vide');
