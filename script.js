@@ -1,71 +1,54 @@
-/************************Get Data*****************************/  
-let firstNameInput = document.getElementById("first-name");
-let lastNameInput = document.getElementById("last-name");
-let messageTextarea = document.getElementById("message");
-let divComment = document.getElementById("div-comment");
-let identity = document.getElementById("identity");
-let comment = document.getElementById("comment");
-let errorMessage = document.querySelector("#error-message");
-let form = document.querySelector("form");
+console.log("script chargé !");
+// Reperer dans le dom comment list
+const myError = document.querySelector("#error-message");
+const form = document.querySelector("form");
+const commentList = document.querySelector("#comment-list");
+// recuperer clonecomment cloner
+const comment = document.querySelector("#comment-list > div:nth-child(2)");
 
-
-/************Delete Data*************/
-function deleteForm(){
-firstNameInput.value = "";
-lastNameInput.value = "";
-messageTextarea.value = "";
-}
-
-/********************** Add Data********************************/
-function validateForm() {  
-let userIdentity1 = document.createTextNode(firstNameInput.value);
-let userIdentity2 = document.createTextNode(lastNameInput.value);
-let newMessage = document.createTextNode(messageTextarea.value);
-let space = document.createTextNode(" ");
-identity.appendChild(userIdentity1);
-identity.appendChild(space);
-identity.appendChild(userIdentity2);
-comment.appendChild(newMessage);
-divComment.style.display="block";
-deleteForm();
+// creer une fonction pour cloné automatiquement
+const cloneComment = (comment, firstname, lastname, message) => {
+  const commentClone = comment.cloneNode(true);
+  const h3 = commentClone.querySelector(".font-medium, .text-gray-900");
+  h3.textContent = `${firstname} ${lastname}`;
+  const p = commentClone.querySelector(
+    ".prose, .prose-sm, .mt-4, .max-w-none, .text-gray-500"
+  );
+  p.textContent = message;
+  return commentClone;
 };
 
-/**********************Submit Data*****************************/
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if(firstNameInput.value == "" || lastNameInput.value == "" || messageTextarea.value == "")
-    {
-        errorMessage.style.display="block"; 
-    }
-    else if(!firstNameInput.value.match(/^[a-zA-Z]/) || !lastNameInput.value.match(/^[a-zA-Z]/)){
-        alert("Le nom et prénom ne peuvent contenir que des lettres !");
-        deleteForm();
-    }
-    else{
-    validateForm();
-    errorMessage.style.display="none";   
-   }   
+const resetFormInput = () => {
+  document.querySelector("#first-name").value = "";
+  document.querySelector("#last-name").value = "";
+  document.querySelector("#message").value = "";
+};
+
+//soumission du form
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  // recuperation des valeurs des inputs
+  const inputFirstName = document.querySelector("#first-name").value.trim();
+  const inputLastName = document.querySelector("#last-name").value.trim();
+  const inputMessage = document.querySelector("#message").value.trim();
+
+  // on verifie que les input ne sont pas vide
+  if (inputFirstName == "" || inputLastName == "" || inputMessage == "") {
+    myError.style.display = "block";
+    console.log("un ou plusieurs champs sont vide");
+  } else {
+    const clone = cloneComment(
+      comment,
+      inputFirstName,
+      inputLastName,
+      inputMessage
+    );
+    // ajout le clone dans le dom
+    commentList.appendChild(clone);
+
+    resetFormInput();
+    myError.style.display = "none";
+    console.log("tout est ok");
+  }
 });
-
-let btn = document.querySelector(button)
-
-document.querySelector("button").addEventListener('click' , function(norefresh) {
-    norefresh.preventDefault();
-    btn.onclick = function(){checkbox()}
-});
-
-//creation de la fonction check box pour controler que les élément ne soit pas vides
-function checkbox(firstname,lastname,message){
-    if (firstname--){
-        alert('le champ premon est vide');
-        return false;
-    }
-    if (lastname--){
-        alert('le champ nom est vide');
-        return false;
-    }
-    if (message--){
-        alert('le champ message est vide');
-        return false;
-    }
-}   
